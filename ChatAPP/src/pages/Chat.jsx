@@ -4,7 +4,7 @@ import React from 'react'
 const Chat = () => {
   return (
     <div>
-      ChatAPP
+      Chat
     </div>
   )
 }
