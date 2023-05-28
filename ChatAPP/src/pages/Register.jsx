@@ -1,15 +1,16 @@
 /* eslint-disable no-unused-vars */
 import React, { useContext } from 'react'
 import { Alert, Button, Form, Row, Col, Stack } from "react-bootstrap"
-import { authContext } from '../context/authContext'
-import { useState } from 'react'
+import { AuthContext } from '../context/AuthContext'
+// import { useState } from 'react'
 const Register = () => {
 
-    const { registerInfo, updateRegisterInfo } = useContext(authContext)
-
+    const {  registerInfo, registerError, isRegisterLoading, registerUser, updateRegisterInfo } = useContext(AuthContext)
+   
+ 
     return (
         <>
-            <Form>
+            <Form onSubmit={registerUser}>
                 <Row style={{
                     height: "100vh",
                     justifyContent: "center",
@@ -19,24 +20,22 @@ const Register = () => {
                         <Stack gap={3}>
                             <h2>Register</h2>
                             <Form.Control type='text' placeholder='Name' onChange={(e) =>
-                                updateRegisterInfo({...registerInfo,name:e.target.value})
-                            } />
+                             updateRegisterInfo({ ...registerInfo, name: e.target.value })} />
                             <Form.Control type='text' placeholder='Email' onChange={(e) =>
-                                updateRegisterInfo({ ...registerInfo, email: e.target.value })
-                            } />
+                                updateRegisterInfo({ ...registerInfo, email: e.target.value })}  />
                             <Form.Control type='text' placeholder='Password' onChange={(e) =>
-                                updateRegisterInfo({ ...registerInfo, password: e.target.value })
-                            } />
-                            <Button  variant='primary' type='submit'>
-                                Register
-                            </Button>
-                            <Alert variant='danger'>
+                                updateRegisterInfo({ ...registerInfo, password: e.target.value })}  />
+                            < Button variant='primary' type='submit' >
+                                {isRegisterLoading ? "Creating your account" : "Register"}
+                            </Button >
+                            {registerError?.error && <Alert variant='danger'>
                                 <p>
-                                    An error ocured
+                                    {registerError?.message }
                                 </p>
-                
-                                
-                            </Alert>
+
+
+                            </Alert>}
+                           
                         </Stack>
                     </Col>
                 </Row>
@@ -46,3 +45,6 @@ const Register = () => {
 }
 
 export default Register
+
+
+

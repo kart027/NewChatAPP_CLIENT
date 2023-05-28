@@ -11,12 +11,12 @@ import NavBar from './components/Navbar'
 
 
 
+
 function App() {
 
 
   return (
-    <>
-    <NavBar/>
+    <> <NavBar/>
 
       <Container className='text-secondary'>
         <Routes>
@@ -28,6 +28,7 @@ function App() {
 
         </Routes>
       </Container >
+    
     </>
   )
 }
