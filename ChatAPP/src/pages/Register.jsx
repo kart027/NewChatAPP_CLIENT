@@ -1,8 +1,12 @@
 /* eslint-disable no-unused-vars */
-import React from 'react'
+import React, { useContext } from 'react'
 import { Alert, Button, Form, Row, Col, Stack } from "react-bootstrap"
-
+import { authContext } from '../context/authContext'
+import { useState } from 'react'
 const Register = () => {
+
+    const { registerInfo, updateRegisterInfo } = useContext(authContext)
+
     return (
         <>
             <Form>
@@ -14,9 +18,15 @@ const Register = () => {
                     <Col xs={6}>
                         <Stack gap={3}>
                             <h2>Register</h2>
-                            <Form.Control type='text' placeholder='Name' />
-                            <Form.Control type='text' placeholder='Email' />
-                            <Form.Control type='text' placeholder='Password' />
+                            <Form.Control type='text' placeholder='Name' onChange={(e) =>
+                                updateRegisterInfo({...registerInfo,name:e.target.value})
+                            } />
+                            <Form.Control type='text' placeholder='Email' onChange={(e) =>
+                                updateRegisterInfo({ ...registerInfo, email: e.target.value })
+                            } />
+                            <Form.Control type='text' placeholder='Password' onChange={(e) =>
+                                updateRegisterInfo({ ...registerInfo, password: e.target.value })
+                            } />
                             <Button  variant='primary' type='submit'>
                                 Register
                             </Button>
