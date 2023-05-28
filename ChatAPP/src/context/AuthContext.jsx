@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
 
-import {createContext,useCallback,useContext,useState} from "react";
+import {createContext,useCallback,useContext,useEffect,useState} from "react";
 import { Postrequest ,baseUrl} from "../utils/services";
 
 
@@ -12,11 +12,25 @@ export const AuthContextProvider = ({children})=>{
     const[user,setuser] = useState(null);
     const[registerError,setRegisterError] = useState(null)
     const[isRegisterLoading,setIsRegisterLoading] = useState(false)
+    const [loginError, setLoginError] = useState(null)
+    const [isLoginLoading, setIsLoginLoading] = useState(false)
     const[registerInfo,setRegisterInfo] = useState({
         name:"",
         email:"",
         password:""
     })
+    const [loginInfo, setLoginInfo] = useState({
+      
+        email: "",
+        password: ""
+    })
+
+
+
+    useEffect(()=>{
+        const user = localStorage.getItem("User")
+        setuser(JSON.parse(user))
+    },[])
 
     const registerUser = useCallback(async (e)=>{
         e.preventDefault()
@@ -24,8 +38,7 @@ export const AuthContextProvider = ({children})=>{
         setRegisterError(null);
         const response = await Postrequest(`${baseUrl}/register`,JSON.stringify(registerInfo))
         setIsRegisterLoading(false)
-        console.log(response)
-
+     
         if(response.error){
             return setRegisterError(response)
         }
@@ -34,12 +47,37 @@ export const AuthContextProvider = ({children})=>{
         setuser(response)
     },[registerInfo])
 
+    const loginUser = useCallback(async (e) => {
+        e.preventDefault()
+        setIsLoginLoading(true);
+        setLoginError(null);
+        const response = await Postrequest(`${baseUrl}/login`, JSON.stringify(loginInfo))
+        setIsLoginLoading(false)
+     
+
+        if (response.error) {
+            return setLoginError(response)
+        }
+
+        localStorage.setItem("User", JSON.stringify(response))
+        setuser(response)
+    }, [loginInfo])
+
+    const logOutUser = useCallback(()=>{
+        localStorage.removeItem("User")
+        setuser(null);
+    },[])
+
     const updateRegisterInfo = useCallback((info)=>{
         setRegisterInfo(info)
     },[])
 
+    const updateloginUser = useCallback((info) => {
+        setLoginInfo(info)
+    }, [])
+
     return <AuthContext.Provider value={{
-        user,registerInfo,registerError,isRegisterLoading,registerUser,updateRegisterInfo
+        user,registerInfo,registerError,isRegisterLoading,registerUser,updateRegisterInfo,logOutUser,loginUser,updateloginUser,isLoginLoading,loginError,loginInfo
     }}>
            {children}
     </AuthContext.Provider>
